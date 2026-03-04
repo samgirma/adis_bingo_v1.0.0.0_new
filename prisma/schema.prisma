@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  username          String    @unique @db.Text
+  password          String    @db.Text
+  role              String    @default("employee") @db.Text
+  name              String    @db.Text
+  email             String?   @db.Text
+  accountNumber     String?   @unique @map("account_number") @db.Text
+  balance           Float     @default(0)
+  isBlocked         Boolean   @default(false) @map("is_blocked")
+  creditBalance     Float     @default(0) @map("credit_balance")
+  totalRevenue      Float     @default(0) @map("total_revenue")
+  totalGames        Int       @default(0) @map("total_games")
+  totalPlayers      Int       @default(0) @map("total_players")
+  machineId         String?   @map("machine_id") @db.Text
+  createdAt         DateTime? @map("created_at")
+
+  // Relations
+  games             Game[]
+  transactions      Transaction[]
+  gameHistory       GameHistory[]
+  cartelas          Cartela[]
+  dailyRevenueSummaries DailyRevenueSummary[]
+  bookedCartelas    Cartela[] @relation("BookedBy")
+
+  @@map("users")
+}
+
+model Game {
+  id            Int       @id @default(autoincrement())
+  employeeId    Int       @map("employee_id")
+  status        String    @db.Text
+  prizePool     Float     @default(0) @map("prize_pool")
+  entryFee      Float     @map("entry_fee")
+  calledNumbers String    @default("[]") @map("called_numbers") @db.Text
+  winnerId      Int?      @map("winner_id")
+  startedAt     DateTime? @map("started_at")
+  completedAt   DateTime? @map("completed_at")
+  isPaused      Boolean   @default(false) @map("is_paused")
+  createdAt     DateTime? @map("created_at")
+
+  // Relations
+  employee      User        @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  winner        GamePlayer? @relation(fields: [winnerId], references: [id], onDelete: SetNull)
+  players       GamePlayer[]
+  transactions  Transaction[]
+  gameHistory   GameHistory[]
+  cartelas      Cartela[]
+
+  @@map("games")
+}
+
+model GamePlayer {
+  id            Int       @id @default(autoincrement())
+  gameId        Int       @map("game_id")
+  playerName    String    @map("player_name") @db.Text
+  cartelaNumbers String   @map("cartela_numbers") @db.Text
+  entryFee      Float     @map("entry_fee")
+  isWinner      Boolean   @default(false) @map("is_winner")
+  registeredAt  DateTime? @map("registered_at")
+
+  // Relations
+  game          Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@map("game_players")
+}
+
+model Transaction {
+  id          Int       @id @default(autoincrement())
+  userId      Int?      @map("user_id")
+  amount      Float
+  type        String    @db.Text
+  description String?   @db.Text
+  createdAt   DateTime? @map("created_at")
+
+  // Relations
+  user        User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model GameHistory {
+  id        Int       @id @default(autoincrement())
+  gameId    Int?      @map("game_id")
+  userId    Int?      @map("user_id")
+  action    String    @db.Text
+  details   String?   @db.Text
+  createdAt DateTime? @map("created_at")
+
+  // Relations
+  game      Game? @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  user      User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("game_history")
+}
+
+model UsedRecharge {
+  id        Int       @id @default(autoincrement())
+  nonce     String    @unique @db.Text
+  signature String    @db.Text
+  amount    Float
+  userId    Int       @map("user_id")
+  machineId String    @map("machine_id") @db.Text
+  usedAt    DateTime? @default(now()) @map("used_at")
+
+  @@map("used_recharges")
+}
+
+model Cartela {
+  id            Int       @id @default(autoincrement())
+  employeeId    Int       @map("employee_id")
+  cartelaNumber Int       @map("cartela_number")
+  cardNo        Int       @map("card_no")
+  name          String    @db.Text
+  pattern       String    @db.Text
+  isHardcoded   Boolean   @default(false) @map("is_hardcoded")
+  isActive      Boolean   @default(true) @map("is_active")
+  isBooked      Boolean   @default(false) @map("is_booked")
+  bookedBy      Int?      @map("booked_by")
+  gameId        Int?      @map("game_id")
+  createdAt     DateTime? @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  // Relations
+  employee      User  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  bookedByUser  User? @relation("BookedBy", fields: [bookedBy], references: [id], onDelete: SetNull)
+  game          Game? @relation(fields: [gameId], references: [id], onDelete: SetNull)
+
+  @@unique([employeeId, cartelaNumber])
+  @@map("cartelas")
+}
+
+model DailyRevenueSummary {
+  id                     Int       @id @default(autoincrement())
+  date                   String    @unique @db.Text
+  employeeId             Int?      @map("employee_id")
+  totalAdminRevenue      Float     @default(0) @map("total_admin_revenue")
+  totalGamesPlayed       Int       @default(0) @map("total_games_played")
+  totalPlayersRegistered Int       @default(0) @map("total_players_registered")
+  createdAt              DateTime? @map("created_at")
+  updatedAt              DateTime? @map("updated_at")
+
+  // Relations
+  employee User? @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@map("daily_revenue_summary")
+}
