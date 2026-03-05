@@ -13,7 +13,7 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
-    "vercel-build": "vite build",
+    "vercel-build": "prisma generate && vite build",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -143,8 +143,6 @@
       "!keys/private_key.pem"
     ],
     "asar": true,
-    "asarUnpack": [
-      "node_modules/better-sqlite3/**/*"
-    ]
+    "asarUnpack": []
   }
 }
