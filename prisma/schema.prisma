@@ -147,14 +147,28 @@ model DailyRevenueSummary {
   id                     Int       @id @default(autoincrement())
   date                   String    @unique @db.Text
   employeeId             Int?      @map("employee_id")
-  totalAdminRevenue      Float     @default(0) @map("total_admin_revenue")
-  totalGamesPlayed       Int       @default(0) @map("total_games_played")
-  totalPlayersRegistered Int       @default(0) @map("total_players_registered")
-  createdAt              DateTime? @map("created_at")
-  updatedAt              DateTime? @map("updated_at")
+  totalRevenue           Float?    @map("total_revenue")
+  totalGames            Int?      @map("total_games")
+  totalPlayers          Int?      @map("total_players")
+  totalPrizePool       Float?    @map("total_prize_pool")
+  totalEntryFees       Float?    @map("total_entry_fees")
+  totalRechargeAmount  Float?    @map("total_recharge_amount")
+  createdAt             DateTime  @default(now()) @map("created_at")
 
   // Relations
-  employee User? @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employee              User?     @relation(fields: [employeeId], references: [id], onDelete: SetNull)
 
-  @@map("daily_revenue_summary")
+  @@map("daily_revenue_summaries")
+}
+
+model AdminRechargeFile {
+  id            Int       @id @default(autoincrement())
+  username      String    @db.Text
+  accountNumber String    @db.Text @map("account_number")
+  amount        String    @db.Text
+  filename      String    @db.Text
+  shopId        String?   @db.Text @map("shop_id")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@map("admin_recharge_files")
 }

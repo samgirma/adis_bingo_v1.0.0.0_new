@@ -36,7 +36,7 @@ export class AdminStorage {
   }
 
   // User tracking for admin dashboard
-  async createAdminUser(user: Omit<AdminUser, 'id' | 'createdAt' | 'totalRechargeFiles' | 'totalRechargeAmount'>): AdminUser {
+  async createAdminUser(user: Omit<AdminUser, 'id' | 'createdAt' | 'totalRechargeFiles' | 'totalRechargeAmount'>): Promise<AdminUser> {
     const newUser = await this.prisma.user.create({
       data: {
         username: user.username,
@@ -51,7 +51,9 @@ export class AdminStorage {
     return {
       ...user,
       id: newUser.id,
-      createdAt: newUser.createdAt
+      createdAt: newUser.createdAt,
+      totalRechargeFiles: 0,
+      totalRechargeAmount: '0'
     };
   }
 
