@@ -79,6 +79,7 @@ model GamePlayer {
 model Transaction {
   id          Int       @id @default(autoincrement())
   userId      Int?      @map("user_id")
+  gameId      Int?      @map("game_id")
   amount      Float
   type        String    @db.Text
   description String?   @db.Text
@@ -86,6 +87,7 @@ model Transaction {
 
   // Relations
   user        User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game        Game? @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@map("transactions")
 }
