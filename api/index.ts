@@ -76,4 +76,5 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   res.status(status).json({ message });
 });
 
-export default app;
+// Export for Vercel serverless
+module.exports = app;
