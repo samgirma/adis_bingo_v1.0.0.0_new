@@ -1,5 +1,15 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
+// Create and export the query client instance
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+    },
+  },
+});
+
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     try {
@@ -20,30 +30,29 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-export async function apiRequest(
-  method: string,
-  url: string,
-  data?: unknown | undefined,
-): Promise<Response> {
-  const res = await fetch(url, {
-    method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
+export const apiRequest: QueryFunction = async ({ queryKey, meta }) => {
+  const [url, options = {}] = queryKey as [string, RequestInit?];
+  
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    credentials: 'include',
+    ...options,
   });
 
+  await throwIfResNotOk(response);
+
   // Global 401 interceptor
-  if (res.status === 401) {
-    // Import queryClient dynamically to avoid circular dependency
-    const { queryClient } = await import('./queryClient');
+  if (response.status === 401) {
     // Clear all cached data and invalidate auth queries
     queryClient.clear();
     queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
   }
 
-  await throwIfResNotOk(res);
-  return res;
-}
+  return response.json();
+};
 
 type UnauthorizedBehavior = "returnNull" | "throw";
 export const getQueryFn: <T>(options: {
@@ -55,25 +64,6 @@ export const getQueryFn: <T>(options: {
       credentials: "include",
     });
 
-    if (unauthorizedBehavior === "returnNull" && res.status === 401) {
-      return null;
-    }
-
     await throwIfResNotOk(res);
     return await res.json();
   };
-
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      retry: false,
-    },
-    mutations: {
-      retry: false,
-    },
-  },
-});

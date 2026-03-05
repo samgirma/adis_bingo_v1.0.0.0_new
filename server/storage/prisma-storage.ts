@@ -501,10 +501,9 @@ export class PrismaStorage implements IStorage {
       return await this.prisma.dailyRevenueSummary.update({
         where: { id: existingSummary.id },
         data: {
-          totalAdminRevenue: existingSummary.totalAdminRevenue + parseFloat(summary.totalAdminRevenue),
-          totalGamesPlayed: existingSummary.totalGamesPlayed + summary.totalGamesPlayed,
-          totalPlayersRegistered: existingSummary.totalPlayersRegistered + summary.totalPlayersRegistered,
-          updatedAt: new Date()
+          totalRevenue: existingSummary.totalRevenue + parseFloat(summary.totalRevenue),
+          totalGames: existingSummary.totalGames + summary.totalGames,
+          totalPlayers: existingSummary.totalPlayers + summary.totalPlayers
         }
       });
     } else {
@@ -512,11 +511,10 @@ export class PrismaStorage implements IStorage {
         data: {
           date: summary.date,
           employeeId: summary.employeeId,
-          totalAdminRevenue: parseFloat(summary.totalAdminRevenue),
-          totalGamesPlayed: summary.totalGamesPlayed,
-          totalPlayersRegistered: summary.totalPlayersRegistered,
-          createdAt: new Date(),
-          updatedAt: new Date()
+          totalRevenue: parseFloat(summary.totalRevenue),
+          totalGames: summary.totalGames,
+          totalPlayers: summary.totalPlayers,
+          createdAt: new Date()
         }
       });
     }
