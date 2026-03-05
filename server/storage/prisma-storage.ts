@@ -344,16 +344,19 @@ export class PrismaStorage implements IStorage {
 
   async updateGameHistory(gameId: number, updates: any): Promise<GameHistory> {
     const { completedAt, ...validUpdates } = updates as any;
-    return await this.prisma.gameHistory.updateMany({
-      where: { id: gameId },
+    await this.prisma.gameHistory.updateMany({
+      where: { gameId },
       data: validUpdates
-    })) as Promise<GameHistory>;
+    });
+    return await this.prisma.gameHistory.findFirst({ where: { gameId } }) as GameHistory;
   }
 
   async recordGameHistory(history: any): Promise<GameHistory> {
-    return await this.prisma.gameHistory.update({
-      where: { gameId: history.id },
-      data: { completedAt: new Date() }
+    return await this.prisma.gameHistory.create({
+      data: {
+        ...history,
+        createdAt: new Date()
+      }
     });
   }
 
