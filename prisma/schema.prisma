@@ -46,7 +46,6 @@ model Game {
   prizePool     Float     @default(0) @map("prize_pool")
   entryFee      Float     @map("entry_fee")
   calledNumbers String    @default("[]") @map("called_numbers") @db.Text
-  winnerId      Int?      @map("winner_id")
   startedAt     DateTime? @map("started_at")
   completedAt   DateTime? @map("completed_at")
   isPaused      Boolean   @default(false) @map("is_paused")
