@@ -1,4 +1,5 @@
-import { PrismaClient } from '../src/lib/database';
+import { PrismaClient } from '@prisma/client';
+import prismaClient from '../src/lib/database';
 import type { 
   User, Game, GamePlayer, Transaction, GameHistory, 
   DailyRevenueSummary, Cartela, UsedRecharge 
@@ -84,7 +85,7 @@ export class PrismaStorage implements IStorage {
   private prisma: PrismaClient;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    this.prisma = prismaClient;
   }
 
   // User methods

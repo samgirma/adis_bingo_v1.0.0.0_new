@@ -6,7 +6,7 @@ import path from "path";
 const app = express();
 
 // Add CORS headers for proper browser communication
-app.use((req, res, next) => {
+app.use((req: any, res: any, next: any) => {
   const allowedOrigin = process.env.NODE_ENV === 'production' ? false : req.headers.origin || '*';
   res.header('Access-Control-Allow-Origin', allowedOrigin);
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -26,20 +26,20 @@ app.use(express.urlencoded({ extended: false, limit: process.env.JSON_LIMIT || '
 // Serve static audio files with proper MIME types
 const publicPath = path.resolve(process.cwd(), "public");
 app.use(express.static(publicPath, {
-  setHeaders: (res, filePath) => {
+  setHeaders: (res: any, filePath: any) => {
     if (filePath.endsWith('.mp3')) {
       res.setHeader('Content-Type', 'audio/mpeg');
     }
   }
 }));
 
-app.use((req, res, next) => {
+app.use((req: any, res: any, next: any) => {
   const start = Date.now();
   const path = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
   const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
+  res.json = function (bodyJson: any, ...args: any) {
     capturedJsonResponse = bodyJson;
     return originalResJson.apply(res, [bodyJson, ...args]);
   };
@@ -64,7 +64,11 @@ app.use((req, res, next) => {
 });
 
 // Register all routes
-await registerRoutes(app);
+registerRoutes(app).then(() => {
+  console.log("Routes registered successfully");
+}).catch((error) => {
+  console.error("Error registering routes:", error);
+});
 
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   const status = err.status || err.statusCode || 500;
