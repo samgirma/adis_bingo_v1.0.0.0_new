@@ -180,8 +180,7 @@ export class PrismaStorage implements IStorage {
       where: { id },
       include: {
         employee: true,
-        players: true,
-        winner: true
+        players: true
       }
     });
   }
@@ -207,10 +206,11 @@ export class PrismaStorage implements IStorage {
     });
   }
 
-  async updateGame(id: number, updates: Partial<Game>): Promise<Game | null> {
+  async updateGame(id: number, updates: Partial<Game>): Promise<Game> {
+    const { winnerId, ...validUpdates } = updates as any;
     return await this.prisma.game.update({
       where: { id },
-      data: updates
+      data: validUpdates
     });
   }
 
@@ -340,6 +340,14 @@ export class PrismaStorage implements IStorage {
         createdAt: new Date()
       }
     });
+  }
+
+  async updateGameHistory(gameId: number, updates: any): Promise<GameHistory> {
+    const { completedAt, ...validUpdates } = updates as any;
+    return await this.prisma.gameHistory.updateMany({
+      where: { gameId },
+      data: validUpdates
+    }).then(() => this.prisma.gameHistory.findFirst({ where: { gameId } })) as Promise<GameHistory>;
   }
 
   async recordGameHistory(history: any): Promise<GameHistory> {
