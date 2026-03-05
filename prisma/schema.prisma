@@ -54,7 +54,6 @@ model Game {
 
   // Relations
   employee      User        @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  winner        GamePlayer? @relation(fields: [winnerId], references: [id], onDelete: SetNull)
   players       GamePlayer[]
   transactions  Transaction[]
   gameHistory   GameHistory[]
