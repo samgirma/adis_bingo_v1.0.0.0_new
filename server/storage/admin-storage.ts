@@ -105,22 +105,22 @@ export class AdminStorage {
   createRechargeFileRecord(rechargeFile: Omit<AdminRechargeFile, 'id' | 'createdAt'>): AdminRechargeFile {
     const stmt = adminDb.prepare(`
       INSERT INTO admin_recharge_files (
-        filename, fileData, signature, employeeId, amount, createdAt, shopId
+        filename,    amount, createdAt, shopId
       ) VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
       rechargeFile.filename,
-      rechargeFile.fileData,
-      rechargeFile.signature,
-      rechargeFile.employeeId,
+      rechargeFile.
+      rechargeFile.
+      rechargeFile.
       rechargeFile.amount,
       new Date().toISOString(),
       rechargeFile.shopId
     );
 
     // Update user's recharge tracking
-    this.updateUserRechargeStats(rechargeFile.employeeId, rechargeFile.amount);
+    this.updateUserRechargeStats(rechargeFile. rechargeFile.amount);
 
     return this.getRechargeFileById(result.lastInsertRowid as number)!;
   }

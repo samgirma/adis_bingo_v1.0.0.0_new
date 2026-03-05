@@ -10,7 +10,7 @@ import secureConfig from '../config/secure-config';
 interface LogEntry {
   timestamp: number;
   level: 'INFO' | 'WARN' | 'ERROR' | 'SECURITY' | 'AUDIT';
-  category: 'GAME' | 'RECHARGE' | 'AUTH' | 'SYSTEM' | 'TAMPER';
+  category: 'GAME' | 'RECHARGE' | 'AUTH' | 'SYSTEM' | 'SECURITY';
   userId?: number;
   username?: string;
   action: string;
@@ -144,7 +144,7 @@ class SecureLogger {
       case 'ERROR': return 'red';
       case 'SECURITY': return 'magenta';
       case 'AUDIT': return 'cyan';
-      case 'TAMPER': return 'red';
+      case 'SECURITY': return 'red';
       default: return 'white';
     }
   }
@@ -278,8 +278,8 @@ class SecureLogger {
    */
   public logTamperDetection(details: any, userId?: number, username?: string): void {
     this.addLogEntry({
-      level: 'TAMPER',
-      category: 'TAMPER',
+      level: 'SECURITY',
+      category: 'SECURITY',
       userId,
       username,
       action: 'TAMPER_DETECTED',
