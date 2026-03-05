@@ -207,7 +207,7 @@ export class PrismaStorage implements IStorage {
   }
 
   async updateGame(id: number, updates: Partial<Game>): Promise<Game> {
-    const { winnerId, ...validUpdates } = updates as any;
+    const {  ...validUpdates } = updates as any;
     return await this.prisma.game.update({
       where: { id },
       data: validUpdates
@@ -255,8 +255,8 @@ export class PrismaStorage implements IStorage {
       where: { id: gameId },
       data: { 
         status: 'completed',
-        completedAt: new Date(),
-        winnerId,
+        
+        
         prizePool: parseFloat(prizeAmount)
       }
     });
@@ -265,14 +265,14 @@ export class PrismaStorage implements IStorage {
   // Game Player methods
   async getGamePlayers(gameId: number): Promise<GamePlayer[]> {
     return await this.prisma.gamePlayer.findMany({
-      where: { gameId },
+      where: { id: gameId },
       orderBy: { registeredAt: 'desc' }
     });
   }
 
   async getGamePlayerCount(gameId: number): Promise<number> {
     return await this.prisma.gamePlayer.count({
-      where: { gameId }
+      where: { id: gameId }
     });
   }
 
@@ -345,9 +345,9 @@ export class PrismaStorage implements IStorage {
   async updateGameHistory(gameId: number, updates: any): Promise<GameHistory> {
     const { completedAt, ...validUpdates } = updates as any;
     return await this.prisma.gameHistory.updateMany({
-      where: { gameId },
+      where: { id: gameId },
       data: validUpdates
-    }).then(() => this.prisma.gameHistory.findFirst({ where: { gameId } })) as Promise<GameHistory>;
+    })) as Promise<GameHistory>;
   }
 
   async recordGameHistory(history: any): Promise<GameHistory> {
