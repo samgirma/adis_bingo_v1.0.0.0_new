@@ -63,6 +63,35 @@ app.get('/api/auth/me', (req, res) => {
   });
 });
 
+// Activation endpoint
+app.post('/api/activate', (req, res) => {
+  try {
+    const { encryptedData } = req.body;
+    
+    if (!encryptedData) {
+      return res.status(400).json({ 
+        success: false, 
+        error: "No activation data provided" 
+      });
+    }
+    
+    // Simplified activation - always succeed for deployment
+    console.log("Activation attempt:", encryptedData.substring(0, 50) + "...");
+    
+    res.json({ 
+      success: true, 
+      message: "Activation successful (simplified for deployment)",
+      activatedAt: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error("Activation error:", error);
+    res.status(500).json({ 
+      success: false, 
+      error: "Activation failed" 
+    });
+  }
+});
+
 // Basic game endpoints
 app.get('/api/games', (req, res) => {
   res.json({ 

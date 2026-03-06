@@ -97,9 +97,20 @@ export default function ActivationScreen({ onActivationSuccess }: ActivationScre
     setIsActivating(true);
     
     try {
-      const response = await apiRequest("POST", "/api/activate", {
-        encryptedData: activationFile.trim()
+      const response = await fetch("/api/activate", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          encryptedData: activationFile.trim()
+        })
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
       
