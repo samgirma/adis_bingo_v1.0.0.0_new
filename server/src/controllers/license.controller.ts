@@ -46,9 +46,15 @@ export const getStatus = (_req: Request, res: Response) => {
 // GET /api/license/machine-id
 export const getMachineId = async (_req: Request, res: Response) => {
     try {
-        res.json({ machineId: await getHardwareId() });
+        const machineId = await getHardwareId();
+        res.json({ machineId });
     } catch (err) {
-        res.status(500).json({ message: "Failed to get machine ID" });
+        console.error("Failed to get machine ID:", err);
+        // Fallback for serverless environments
+        res.json({ 
+            machineId: `SERVERLESS_FALLBACK_${Date.now()}`,
+            error: "Using fallback ID for serverless environment"
+        });
     }
 };
 
