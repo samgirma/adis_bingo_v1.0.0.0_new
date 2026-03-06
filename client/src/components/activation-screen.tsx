@@ -34,8 +34,19 @@ export default function ActivationScreen({ onActivationSuccess }: ActivationScre
   const fetchMachineId = async () => {
     try {
       console.log("Fetching machine ID from /api/license/machine-id...");
-      const response = await apiRequest("GET", "/api/license/machine-id");
+      const response = await fetch("/api/license/machine-id", {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
       console.log("Response status:", response.status);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       console.log("Machine ID data:", data);
       setMachineId(data.machineId || "Failed to get ID");

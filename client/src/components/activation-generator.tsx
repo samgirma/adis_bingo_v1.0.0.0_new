@@ -94,7 +94,11 @@ export default function ActivationGenerator({ privateKey }: ActivationGeneratorP
 
   const getCurrentMachineId = async () => {
     try {
-      const response = await apiRequest("GET", "/api/license/machine-id");
+      const response = await fetch("/api/license/machine-id", {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
       const data = await response.json();
       setMachineId(data.machineId);
       toast({

@@ -29,11 +29,19 @@ export function useActivation() {
       setState(prev => ({ ...prev, isLoading: true, error: null }));
       
       // Check license status
-      const licenseResponse = await apiRequest("GET", "/api/license/status");
+      const licenseResponse = await fetch("/api/license/status", {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
       const licenseData = await licenseResponse.json();
       
       // Get machine ID
-      const machineResponse = await apiRequest("GET", "/api/license/machine-id");
+      const machineResponse = await fetch("/api/license/machine-id", {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
       const machineData = await machineResponse.json();
       
       setState({

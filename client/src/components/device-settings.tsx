@@ -24,7 +24,11 @@ export default function DeviceSettings() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await apiRequest("GET", "/api/license/machine-id");
+        const res = await fetch("/api/license/machine-id", {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
         const data = await res.json();
         if (!cancelled) {
           setMachineId(data.machineId || "");
