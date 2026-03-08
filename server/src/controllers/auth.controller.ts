@@ -120,6 +120,48 @@ export async function login(req: Request, res: Response) {
     }
 }
 
+// ─── CREATE USER (DIRECT) ───────────────────────────────────────────
+export async function createUser(req: Request, res: Response) {
+    try {
+        const { username, password, role = 'employee', name, accountNumber } = req.body;
+
+        if (!username || !password || !name) {
+            return res.status(400).json({ message: "Username, password, and name required" });
+        }
+
+        const existingUser = await storage.getUserByUsername(username);
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        const newUser = await storage.createUser({
+            username,
+            password: hashedPassword,
+            role,
+            name,
+            accountNumber: accountNumber || `${username.toUpperCase()}${Math.floor(Math.random() * 1000)}`,
+            balance: 0,
+            isBlocked: false,
+            creditBalance: 0,
+            totalRevenue: 0,
+            totalGames: 0,
+            totalPlayers: 0
+        });
+
+        const { password: _, ...userWithoutPassword } = newUser;
+        
+        res.json({
+            message: "User created successfully",
+            user: userWithoutPassword
+        });
+    } catch (error) {
+        console.error("Direct user creation error:", error);
+        res.status(500).json({ message: "Failed to create user" });
+    }
+}
+
 // ─── REGISTER VIA FILE ──────────────────────────────────────────────
 export async function registerFile(req: Request, res: Response) {
     try {

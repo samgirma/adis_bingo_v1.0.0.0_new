@@ -30,7 +30,30 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-export const apiRequest: QueryFunction = async ({ queryKey, meta }) => {
+export const apiRequest = async (method: string, url: string, data?: any) => {
+  const response = await fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: data ? JSON.stringify(data) : undefined,
+  });
+
+  await throwIfResNotOk(response);
+
+  // Global 401 interceptor
+  if (response.status === 401) {
+    // Clear all cached data and invalidate auth queries
+    queryClient.clear();
+    queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+  }
+
+  return response.json();
+};
+
+// Keep the original QueryFunction for backward compatibility
+export const apiRequestQuery: QueryFunction = async ({ queryKey, meta }) => {
   const [url, options = {}] = queryKey as [string, RequestInit?];
   
   const response = await fetch(url, {
