@@ -177,6 +177,8 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
   return (
     <div className="space-y-6">
       <Card>
+
+      </Card>
         <CardHeader>
           <div className="flex items-center gap-2">
             <Users className="h-6 w-6 text-purple-500" />
@@ -186,6 +188,8 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
             Generate encrypted .enc files for user accounts and balance recharges with cryptographic signing
           </CardDescription>
         </CardHeader>
+        <CardContent>
+
         <CardContent>
           {/* Tab Selection */}
           <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
@@ -324,13 +328,15 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
 
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-blue-700">
-                  <strong>Security Features:</strong> Each recharge file includes a unique nonce, timestamp, and machine ID binding to prevent reuse and unauthorized access.
+                  <strong>Security Features:</strong> Each recharge file includes a unique nonce, timestamp, and digital signature to prevent reuse and unauthorized access.
                 </p>
               </div>
+
+    <Card>
             </div>
-          )}
         </CardContent>
-      </Card>
+
+    </div>
     </div>
   );
 }

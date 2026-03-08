@@ -1469,7 +1469,7 @@ export default function BingoEmployeeDashboard({ onLogout }: BingoEmployeeDashbo
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">
-      {/* Celebration Component */}
+
       <Celebration />
       {/* Game Setting Overlay */}
       {gameState === 'SETTING' && (
@@ -1683,11 +1683,6 @@ export default function BingoEmployeeDashboard({ onLogout }: BingoEmployeeDashbo
                   <div className="text-sm text-gray-600 mt-2">Total Revenue (ETB)</div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        </div>
-      )}
 
       {/* Registration Workflow */}
       {gameState === 'REGISTERING' && (
@@ -3257,6 +3252,9 @@ export default function BingoEmployeeDashboard({ onLogout }: BingoEmployeeDashbo
           </div>
         </div>
       )}
+
     </div>
   );
+
+    }
 }
