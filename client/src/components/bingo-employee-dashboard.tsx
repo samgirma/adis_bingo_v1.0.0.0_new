@@ -3254,7 +3254,7 @@ export default function BingoEmployeeDashboard({ onLogout }: BingoEmployeeDashbo
       )}
 
     </div>
-  );
 
-    }
-}
+  );\n\n}
+
+  );

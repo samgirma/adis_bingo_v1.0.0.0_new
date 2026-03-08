@@ -332,11 +332,11 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
                 </p>
               </div>
 
-    <Card>
-            </div>
-        </CardContent>
 
-    </div>
-    </div>
+
+      </Card>
+
+    </Card>
+  </div>
   );
 }
