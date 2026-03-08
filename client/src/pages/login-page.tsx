@@ -35,8 +35,10 @@ export default function LoginPage() {
       queryClient.invalidateQueries({ queryKey: ["/api/cartelas"] });
       
       toast({
-        title: "Login successful",
+        title: "🎉 Login Successful",
         description: `Welcome back, ${user.name}!`,
+        duration: 2000,
+        className: "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg",
       });
 
       // 4. Redirect to dashboard
@@ -48,9 +50,11 @@ export default function LoginPage() {
     },
     onError: (error: any) => {
       toast({
-        title: "Login Failed",
+        title: "❌ Login Failed",
         description: error.message || "Invalid username or password",
         variant: "destructive",
+        duration: 3000,
+        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg",
       });
     },
   });
@@ -63,8 +67,10 @@ export default function LoginPage() {
       if (data.autoLogin) {
         // Auto-login user after successful registration
         toast({
-          title: "Registration & Login Successful",
+          title: "🎊 Registration & Login Successful",
           description: `Welcome ${data.username}! You have been automatically logged in.`,
+          duration: 2500,
+          className: "bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-0 shadow-lg",
         });
         // Update auth state with user data
         login(data.user);
@@ -73,16 +79,20 @@ export default function LoginPage() {
       } else {
         // Regular registration success
         toast({
-          title: "Registration successful",
+          title: "✅ Registration Successful",
           description: `Your account for ${data.username} has been created. You can now login.`,
+          duration: 3000,
+          className: "bg-gradient-to-r from-blue-500 to-cyan-600 text-white border-0 shadow-lg",
         });
       }
     },
     onError: (error: any) => {
       toast({
-        title: "Registration Failed",
+        title: "⚠️ Registration Failed",
         description: error.message || "Failed to process registration file",
         variant: "destructive",
+        duration: 3000,
+        className: "bg-gradient-to-r from-orange-500 to-red-600 text-white border-0 shadow-lg",
       });
     }
   });
@@ -91,9 +101,11 @@ export default function LoginPage() {
     e.preventDefault();
     if (!username || !password) {
       toast({
-        title: "Error",
+        title: "⚠️ Validation Error",
         description: "Please enter both username and password",
         variant: "destructive",
+        duration: 2000,
+        className: "bg-gradient-to-r from-yellow-500 to-orange-600 text-white border-0 shadow-lg",
       });
       return;
     }

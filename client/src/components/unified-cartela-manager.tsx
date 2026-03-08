@@ -55,12 +55,22 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
       return response.json();
     },
     onSuccess: () => {
-      toast({ title: editingCartela ? "Cartela updated successfully!" : "Cartela created successfully!" });
+      toast({ 
+        title: editingCartela ? "📝 Cartela Updated!" : "✅ Cartela Created!", 
+        duration: 2000,
+        className: "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-0 shadow-lg"
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/cartelas", shopId] });
       resetForm();
     },
     onError: (error: any) => {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ 
+        title: "❌ Error", 
+        description: error.message, 
+        variant: "destructive",
+        duration: 3000,
+        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg"
+      });
     },
   });
 
@@ -73,18 +83,33 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
       if (!response.ok) throw new Error("Failed to delete cartela");
     },
     onSuccess: () => {
-      toast({ title: "Cartela deleted successfully!" });
+      toast({ 
+        title: "🗑️ Cartela Deleted!", 
+        duration: 2000,
+        className: "bg-gradient-to-r from-orange-500 to-red-600 text-white border-0 shadow-lg"
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/cartelas", shopId] });
     },
     onError: (error: any) => {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ 
+        title: "❌ Delete Error", 
+        description: error.message, 
+        variant: "destructive",
+        duration: 3000,
+        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg"
+      });
     },
   });
 
 
   const handleExportCSV = () => {
     if (!cartelas.length) {
-      toast({ title: "No cartelas to export", variant: "destructive" });
+      toast({ 
+        title: "⚠️ No Cartelas to Export", 
+        variant: "destructive",
+        duration: 2000,
+        className: "bg-gradient-to-r from-yellow-500 to-orange-600 text-white border-0 shadow-lg"
+      });
       return;
     }
 
@@ -125,7 +150,13 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
       }).filter(Boolean); // Filter out invalid rows
 
       if (rows.length === 0) {
-        toast({ title: "Error generating CSV", description: "No valid cartela data found.", variant: "destructive" });
+        toast({ 
+          title: "❌ CSV Generation Error", 
+          description: "No valid cartela data found.", 
+          variant: "destructive",
+          duration: 3000,
+          className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg"
+        });
         return;
       }
 
@@ -139,10 +170,21 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
       link.click();
       document.body.removeChild(link);
       
-      toast({ title: "Export Successful", description: `Exported ${rows.length} cartelas.` });
+      toast({ 
+        title: "✅ Export Successful", 
+        description: `Exported ${rows.length} cartelas.`,
+        duration: 2500,
+        className: "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg"
+      });
     } catch (err) {
       console.error("Export error:", err);
-      toast({ title: "Export Failed", description: "An error occurred while exporting.", variant: "destructive" });
+      toast({ 
+        title: "❌ Export Failed", 
+        description: "An error occurred while exporting.", 
+        variant: "destructive",
+        duration: 3000,
+        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg"
+      });
     }
   };
 

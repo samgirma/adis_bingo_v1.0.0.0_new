@@ -84,8 +84,10 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
   const handlePrivateKeyChange = (key: string) => {
     setPrivateKey(key);
     toast({
-      title: "Private Key Updated",
-      description: "Your private key has been securely loaded"
+      title: "🔐 Private Key Updated",
+      description: "Your private key has been securely loaded",
+      duration: 2000,
+      className: "bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-lg",
     });
   };
 
@@ -93,8 +95,10 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
     // Clear private key on logout
     setPrivateKey("");
     toast({
-      title: "Logged Out",
-      description: "Private key has been cleared for security"
+      title: "👋 Logged Out",
+      description: "Private key has been cleared for security",
+      duration: 2000,
+      className: "bg-gradient-to-r from-gray-500 to-slate-600 text-white border-0 shadow-lg",
     });
     onLogout();
   };
@@ -102,17 +106,21 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
   const handleFileGenerated = (fileData: any) => {
     setGeneratedFiles(prev => [fileData, ...prev]);
     toast({
-      title: "File Generated",
-      description: "Account file has been generated successfully"
+      title: "📄 File Generated",
+      description: "Account file has been generated successfully",
+      duration: 2500,
+      className: "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-0 shadow-lg",
     });
   };
 
   const handleExportData = () => {
     if (!trackingData || trackingData.users.length === 0) {
       toast({
-        title: "No Data Available",
+        title: "⚠️ No Data Available",
         description: "No employee data available to export",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000,
+        className: "bg-gradient-to-r from-yellow-500 to-orange-600 text-white border-0 shadow-lg",
       });
       return;
     }
@@ -135,8 +143,10 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
     URL.revokeObjectURL(url);
 
     toast({
-      title: "Export Successful",
-      description: "Admin data exported successfully"
+      title: "✅ Export Successful",
+      description: "Admin data exported successfully",
+      duration: 2500,
+      className: "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg",
     });
   };
 
