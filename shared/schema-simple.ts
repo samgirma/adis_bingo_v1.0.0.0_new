@@ -13,7 +13,6 @@ export interface User {
   totalRevenue: number;
   totalGames: number;
   totalPlayers: number;
-  machineId?: string;
   createdAt: Date;
 }
 
@@ -65,7 +64,6 @@ export interface UsedRecharge {
   signature: string;
   amount: number;
   userId: number;
-  machineId: string;
   usedAt: Date;
 }
 
@@ -110,7 +108,6 @@ export interface InsertUser {
   totalRevenue?: number;
   totalGames?: number;
   totalPlayers?: number;
-  machineId?: string;
 }
 
 export interface InsertGame {

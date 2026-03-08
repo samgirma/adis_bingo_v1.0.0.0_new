@@ -30,7 +30,6 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
 
   // Recharge provisioning state
   const [selectedEmployee, setSelectedEmployee] = useState("");
-  const [machineId, setMachineId] = useState("");
   const [rechargeAmount, setRechargeAmount] = useState("");
 
   const generateUserFile = async () => {
@@ -116,7 +115,7 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
       return;
     }
 
-    if (!selectedEmployee || !machineId || !rechargeAmount) {
+    if (!selectedEmployee || !rechargeAmount) {
       toast({
         title: "Missing Information",
         description: "Please fill in all recharge fields",
@@ -132,7 +131,6 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           employeeAccountNumber: selectedEmployee,
-          machineId,
           amount: rechargeAmount,
           privateKey // Send private key for signing
         })
@@ -159,7 +157,6 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
 
       // Reset form
       setSelectedEmployee("");
-      setMachineId("");
       setRechargeAmount("");
 
       toast({
@@ -297,20 +294,6 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="machineId">Machine ID</Label>
-                  <Input
-                    id="machineId"
-                    value={machineId}
-                    onChange={(e) => setMachineId(e.target.value)}
-                    placeholder="BNG-XXXXXXXXXXXX (from employee's system)"
-                    className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-400 font-mono text-sm"
-                  />
-                  <p className="text-xs text-gray-500">
-                    Enter the machine ID from the employee's report tab
-                  </p>
-                </div>
-              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="rechargeAmount">Recharge Amount (ETB)</Label>

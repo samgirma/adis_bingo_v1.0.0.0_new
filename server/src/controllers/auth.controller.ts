@@ -4,11 +4,7 @@ import bcrypt from "bcrypt";
 import * as os from "os";
 import { storage } from "../../storage/prisma-storage";
 import { adminStorage } from "../../storage/admin-storage";
-import UltimateMachineIdGenerator from "../lib/ultimate-machine-id";
 import { encryptData, decryptData, signBalance, verifyBalance, generateKeyPair } from "../lib/crypto";
-
-// Initialize ultimate generator
-const ultimateGenerator = UltimateMachineIdGenerator.getInstance();
 
 const { privateKey: SYSTEM_PRIVATE_KEY, publicKey: SYSTEM_PUBLIC_KEY } = generateKeyPair();
 
@@ -52,7 +48,6 @@ export async function login(req: Request, res: Response) {
                         isBlocked: adminUser.isBlocked
                     };
 
-                    req.session.userId = adminUser.id;
                     req.session.user = sessionUser;
                     req.session.isAdmin = true;
 
@@ -230,7 +225,6 @@ export async function getCurrentUser(req: Request, res: Response) {
         if (isAdmin) {
             const adminUser = adminStorage.getAdminUserById(userId);
             if (adminUser) {
-                const machineId = await ultimateGenerator.getUserMachineId(adminUser.id || userId, adminUser.username);
                 user = {
                     id: adminUser.id,
                     username: adminUser.username,
@@ -241,7 +235,6 @@ export async function getCurrentUser(req: Request, res: Response) {
                     accountNumber: adminUser.accountNumber,
                     balance: adminUser.adminGeneratedBalance,
                     isBlocked: Boolean(adminUser.isBlocked),
-                    machineId: machineId,
                     createdAt: adminUser.createdAt
                 } as any;
             }
@@ -253,11 +246,6 @@ export async function getCurrentUser(req: Request, res: Response) {
 
         if (!user) {
             return res.status(401).json({ message: "User not found" });
-        }
-
-        // Generate machine ID dynamically for employees (if not already set)
-        if (!user.machineId) {
-            user.machineId = await ultimateGenerator.getUserMachineId(user.id, user.username);
         }
 
         // For admins, include their shop's commission rate
@@ -273,54 +261,5 @@ export async function getCurrentUser(req: Request, res: Response) {
         res.json({ user: userWithoutPassword });
     } catch (error) {
         res.status(500).json({ message: "Failed to get user" });
-    }
-}
-
-// ─── VERIFY MACHINE ID ─────────────────────────────────────────────
-export async function verifyMachineId(req: Request, res: Response) {
-    try {
-        const { machineId } = req.body;
-
-        if (!machineId) {
-            return res.status(400).json({ message: "Machine ID is required" });
-        }
-
-        // Support both base and user-specific ultimate formats
-        const baseMachineId = machineId.split('-USR')[0]; // Extract base ID from user-specific ID
-        
-        if (!baseMachineId.startsWith('BNG-ULT-2.0-')) {
-            return res.status(400).json({
-                valid: false,
-                message: "Invalid machine ID format. Please use the ultimate machine ID format."
-            });
-        }
-
-        // Verify the base machine ID
-        const isValid = await ultimateGenerator.verifyMachineId(baseMachineId);
-
-        if (isValid) {
-            res.json({
-                valid: true,
-                message: machineId.includes('-USR') 
-                    ? "User-specific Machine ID is valid for this system"
-                    : "Base Machine ID is valid for this system",
-                systemInfo: {
-                    platform: os.platform(),
-                    arch: os.arch(),
-                    hostname: os.hostname(),
-                    format: machineId.includes('-USR') ? "User-Specific Ultimate" : "Base Ultimate",
-                    baseMachineId: baseMachineId,
-                    isUserSpecific: machineId.includes('-USR')
-                }
-            });
-        } else {
-            res.status(403).json({
-                valid: false,
-                message: "Machine ID is not valid for this system"
-            });
-        }
-    } catch (error) {
-        console.error('Error verifying machine ID:', error);
-        res.status(500).json({ message: "Failed to verify machine ID" });
     }
 }

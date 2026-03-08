@@ -20,7 +20,7 @@ export async function generateRechargeFile(req: Request, res: Response) {
             return res.status(403).json({ message: "Admin access required" });
         }
 
-        const { targetUserId, employeeAccountNumber, amount, machineId, privateKey } = req.body;
+        const { targetUserId, employeeAccountNumber, amount, privateKey } = req.body;
         
         // Support both parameter names for backward compatibility
         const finalTargetUserId = targetUserId || employeeAccountNumber;
@@ -49,12 +49,10 @@ export async function generateRechargeFile(req: Request, res: Response) {
         }
 
         // Create secure payload with all required fields
-        console.log("Creating payload with machine ID:", machineId);
         const payload = {
             amount: parseFloat(amount),
             targetUserId: targetUser.id,
             targetUsername: targetUser.username,
-            machineId: machineId,
             nonce: crypto.randomBytes(16).toString('hex'),
             timestamp: Date.now()
         };
@@ -87,7 +85,6 @@ export async function generateRechargeFile(req: Request, res: Response) {
             payload: {
                 amount: payload.amount,
                 targetUsername: payload.targetUsername,
-                machineId: payload.machineId,
                 timestamp: payload.timestamp
             }
         });
@@ -196,7 +193,6 @@ export async function getTrackingData(req: Request, res: Response) {
 
         const mappedUsers = adminUsers.map(user => ({
             ...user,
-            machineId: user.machine_id,
             isBlocked: Boolean(user.isBlocked)
         }));
 
@@ -354,48 +350,6 @@ export async function loadCredit(req: Request, res: Response) {
     } catch (error) {
         console.error("Error loading credit:", error);
         res.status(500).json({ message: "Failed to load credit" });
-    }
-}
-
-// ─── UPDATE EMPLOYEE MACHINE ID ────────────────────────────────────
-export async function updateEmployeeMachineId(req: Request, res: Response) {
-    try {
-        const userId = (req.session as any)?.userId;
-        const user = await resolveAdminUser(userId);
-
-        if (!user || user.role !== 'admin') {
-            return res.status(403).json({ message: "Admin access required" });
-        }
-
-        const employeeId = parseInt(req.params.id);
-        const { machineId } = req.body;
-
-        if (!machineId) {
-            return res.status(400).json({ message: "Machine ID is required" });
-        }
-
-        const employee = adminStorage.getAdminUserById(employeeId);
-        if (!employee) {
-            return res.status(404).json({ message: "Employee not found" });
-        }
-
-        const stmt = adminDb.prepare(`UPDATE admin_users SET machine_id = ? WHERE id = ?`);
-        stmt.run(machineId, employeeId);
-
-        try {
-            const employeeUser = await storage.getUser(employeeId);
-            if (employeeUser) {
-                const updateStmt = employeeDb.prepare(`UPDATE users SET machine_id = ? WHERE id = ?`);
-                updateStmt.run(machineId, employeeId);
-            }
-        } catch (error) {
-            console.warn('Employee not found in employee database:', error);
-        }
-
-        res.json({ message: "Machine ID updated successfully", machineId });
-    } catch (error) {
-        console.error('Error updating machine ID:', error);
-        res.status(500).json({ message: "Failed to update machine ID" });
     }
 }
 

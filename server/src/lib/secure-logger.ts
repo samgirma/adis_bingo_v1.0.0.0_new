@@ -15,7 +15,6 @@ interface LogEntry {
   username?: string;
   action: string;
   details: any;
-  machineId?: string;
   ip?: string;
 }
 
@@ -240,13 +239,12 @@ class SecureLogger {
   /**
    * Recharge attempt log
    */
-  public logRechargeAttempt(amount: number, userId: number, username: string, machineId: string, success: boolean, reason?: string): void {
+  public logRechargeAttempt(amount: number, userId: number, username: string, success: boolean, reason?: string): void {
     this.addLogEntry({
       level: success ? 'AUDIT' : 'SECURITY',
       category: 'RECHARGE',
       userId,
       username,
-      machineId,
       action: 'RECHARGE_ATTEMPT',
       details: {
         amount,

@@ -58,7 +58,7 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
       toast({ 
         title: editingCartela ? "📝 Cartela Updated!" : "✅ Cartela Created!", 
         duration: 2000,
-        className: "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-0 shadow-lg"
+        className: "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-0 shadow-lg text-center"
       });
       queryClient.invalidateQueries({ queryKey: ["/api/cartelas", shopId] });
       resetForm();
@@ -69,7 +69,7 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
         description: error.message, 
         variant: "destructive",
         duration: 3000,
-        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg"
+        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg text-center"
       });
     },
   });
@@ -86,7 +86,7 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
       toast({ 
         title: "🗑️ Cartela Deleted!", 
         duration: 2000,
-        className: "bg-gradient-to-r from-orange-500 to-red-600 text-white border-0 shadow-lg"
+        className: "bg-gradient-to-r from-orange-500 to-red-600 text-white border-0 shadow-lg text-center"
       });
       queryClient.invalidateQueries({ queryKey: ["/api/cartelas", shopId] });
     },
@@ -96,7 +96,7 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
         description: error.message, 
         variant: "destructive",
         duration: 3000,
-        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg"
+        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg text-center"
       });
     },
   });
@@ -108,7 +108,7 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
         title: "⚠️ No Cartelas to Export", 
         variant: "destructive",
         duration: 2000,
-        className: "bg-gradient-to-r from-yellow-500 to-orange-600 text-white border-0 shadow-lg"
+        className: "bg-gradient-to-r from-yellow-500 to-orange-600 text-white border-0 shadow-lg text-center"
       });
       return;
     }
@@ -155,7 +155,7 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
           description: "No valid cartela data found.", 
           variant: "destructive",
           duration: 3000,
-          className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg"
+          className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg text-center"
         });
         return;
       }
@@ -174,7 +174,7 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
         title: "✅ Export Successful", 
         description: `Exported ${rows.length} cartelas.`,
         duration: 2500,
-        className: "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg"
+        className: "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg text-center"
       });
     } catch (err) {
       console.error("Export error:", err);
@@ -183,7 +183,7 @@ export default function UnifiedCartelaManager({ shopId, adminId }: UnifiedCartel
         description: "An error occurred while exporting.", 
         variant: "destructive",
         duration: 3000,
-        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg"
+        className: "bg-gradient-to-r from-red-500 to-pink-600 text-white border-0 shadow-lg text-center"
       });
     }
   };

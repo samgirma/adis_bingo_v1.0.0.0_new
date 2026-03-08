@@ -31,7 +31,6 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
                     accountNumber: adminUser.accountNumber,
                     balance: adminUser.adminGeneratedBalance,
                     isBlocked: Boolean(adminUser.isBlocked),
-                    machineId: adminUser.machineId,
                     createdAt: adminUser.createdAt
                 } as any;
             }

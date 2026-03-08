@@ -2,7 +2,6 @@
 import type { Request, Response } from "express";
 import * as fs from "fs";
 import * as path from "path";
-import { getHardwareId } from "../lib/hardware-id";
 import { storage } from "../../storage/prisma-storage";
 import { decryptData, verifyBalance } from "../lib/crypto";
 
@@ -54,10 +53,10 @@ export const topup = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Invalid recharge file structure" });
         }
 
-        const { amount, targetUserId, targetUsername, machineId, nonce, timestamp } = payload;
+        const { amount, targetUserId, targetUsername, nonce, timestamp } = payload;
 
         // Validate payload structure
-        if (amount === undefined || !targetUserId || !targetUsername || !machineId || !nonce || !timestamp) {
+        if (amount === undefined || !targetUserId || !targetUsername || !nonce || !timestamp) {
             return res.status(400).json({ message: "Invalid payload: missing required fields" });
         }
 
@@ -73,27 +72,6 @@ export const topup = async (req: Request, res: Response) => {
                 message: "This recharge file is for another user",
                 expected: `${user.username} (ID: ${user.id})`,
                 received: `${targetUsername} (ID: ${targetUserId})`
-            });
-        }
-
-        // 3. Hardware Lock Check
-        const currentMachineId = await getHardwareId();
-        
-        // Extract base machine ID from file's machine ID (handles both base and user-specific formats)
-        const fileBaseMachineId = machineId.split('-USR')[0];
-        
-        console.log("Hardware lock check:", {
-            fileMachineId: machineId,
-            fileBaseMachineId: fileBaseMachineId,
-            currentMachineId: currentMachineId,
-            match: fileBaseMachineId === currentMachineId
-        });
-        
-        if (fileBaseMachineId !== currentMachineId) {
-            return res.status(403).json({ 
-                message: "This recharge file is locked to another computer",
-                expected: currentMachineId,
-                received: machineId
             });
         }
 
@@ -133,8 +111,7 @@ export const topup = async (req: Request, res: Response) => {
             nonce,
             signature,
             amount: amountNum,
-            userId: user.id,
-            machineId: currentMachineId
+            userId: user.id
         });
 
         // Create transaction record
@@ -159,16 +136,5 @@ export const topup = async (req: Request, res: Response) => {
     } catch (error: any) {
         console.error("Secure recharge error:", error);
         res.status(500).json({ message: "Recharge processing failed" });
-    }
-};
-
-// GET /api/recharge/machine-id
-export const getMachineId = async (req: Request, res: Response) => {
-    try {
-        const machineId = await getHardwareId();
-        res.json({ machineId });
-    } catch (error) {
-        console.error("Failed to get machine ID:", error);
-        res.status(500).json({ message: "Failed to get machine ID" });
     }
 };

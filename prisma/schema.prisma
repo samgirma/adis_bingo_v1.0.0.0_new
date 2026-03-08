@@ -25,7 +25,6 @@ model User {
   totalRevenue      Float     @default(0) @map("total_revenue")
   totalGames        Int       @default(0) @map("total_games")
   totalPlayers      Int       @default(0) @map("total_players")
-  machineId         String?   @map("machine_id") @db.Text
   createdAt         DateTime? @map("created_at")
 
   // Relations
@@ -113,7 +112,6 @@ model UsedRecharge {
   signature String    @db.Text
   amount    Float
   userId    Int       @map("user_id")
-  machineId String    @map("machine_id") @db.Text
   usedAt    DateTime? @default(now()) @map("used_at")
 
   @@map("used_recharges")

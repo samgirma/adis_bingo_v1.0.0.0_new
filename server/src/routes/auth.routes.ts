@@ -9,6 +9,5 @@ router.post("/register", authController.createUser);
 router.post("/register-file", authController.registerFile);
 router.post("/logout", authController.logout);
 router.get("/me", authController.getCurrentUser);
-router.post("/verify-machine-id", authController.verifyMachineId);
 
 export const authRoutes = router;

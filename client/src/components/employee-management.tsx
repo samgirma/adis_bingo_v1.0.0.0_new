@@ -39,8 +39,7 @@ export default function EmployeeManagement({ employees, onEmployeeUpdated }: Emp
 
   const filteredEmployees = employees.filter(emp => 
     emp.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    emp.accountNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    emp.machineId?.toLowerCase().includes(searchTerm.toLowerCase())
+    emp.accountNumber?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const togglePasswordVisibility = (employeeId: number) => {
@@ -76,34 +75,31 @@ export default function EmployeeManagement({ employees, onEmployeeUpdated }: Emp
     setIsEditDialogOpen(true);
   };
 
-  const handleSaveEmployee = async () => {
+  const updateEmployee = async () => {
+    if (!editingEmployee) return;
+
     try {
-      const response = await fetch(`/api/admin/employees/${editingEmployee.id}/machine-id`, {
+      const response = await fetch(`/api/admin/employees/${editingEmployee.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ machineId: editingEmployee.machineId })
+        body: JSON.stringify(editingEmployee)
       });
 
       if (response.ok) {
         toast({
-          title: "Machine ID Updated",
-          description: `${editingEmployee.name}'s machine ID has been updated`
+          title: "Employee Updated",
+          description: `${editingEmployee.name}'s information has been updated`,
         });
+        onEmployeeUpdated();
         setIsEditDialogOpen(false);
         setEditingEmployee(null);
-        onEmployeeUpdated();
       } else {
-        const error = await response.json();
-        toast({
-          title: "Update Failed",
-          description: error.message || "Failed to update machine ID",
-          variant: "destructive"
-        });
+        throw new Error('Failed to update employee');
       }
     } catch (error) {
       toast({
         title: "Update Failed",
-        description: "Failed to update machine ID",
+        description: "Failed to update employee information",
         variant: "destructive"
       });
     }
@@ -179,7 +175,7 @@ export default function EmployeeManagement({ employees, onEmployeeUpdated }: Emp
         <CardHeader>
           <CardTitle className="text-white">Employee Directory</CardTitle>
           <CardDescription className="text-slate-400">
-            Complete employee information with machine IDs and credentials
+            Complete employee information and credentials
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -189,7 +185,6 @@ export default function EmployeeManagement({ employees, onEmployeeUpdated }: Emp
                 <TableRow className="border-slate-700">
                   <TableHead className="text-slate-300">Name</TableHead>
                   <TableHead className="text-slate-300">Account Number</TableHead>
-                  <TableHead className="text-slate-300">Machine ID</TableHead>
                   <TableHead className="text-slate-300">Password</TableHead>
                   <TableHead className="text-slate-300">Balance</TableHead>
                   <TableHead className="text-slate-300">Status</TableHead>
@@ -214,30 +209,16 @@ export default function EmployeeManagement({ employees, onEmployeeUpdated }: Emp
                       </div>
                     </TableCell>
                     <TableCell className="text-slate-300">
-                      <div className="flex items-center gap-2">
-                        <Monitor className="h-4 w-4 text-slate-400" />
-                        <span className="font-mono text-sm">{emp.machineId || 'Not Set'}</span>
-                        <div className="flex gap-1">
-                          {emp.machineId && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => copyToClipboard(emp.machineId, 'Machine ID')}
-                              className="h-6 w-6 p-0 text-slate-400 hover:text-white"
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => openEditDialog(emp)}
-                            className="h-6 w-6 p-0 text-slate-400 hover:text-white"
-                            title="Edit Machine ID"
-                          >
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                        </div>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openEditDialog(emp)}
+                          className="h-6 w-6 p-0 text-slate-400 hover:text-white"
+                          title="Edit Employee"
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
                       </div>
                     </TableCell>
                     <TableCell className="text-slate-300">
@@ -327,18 +308,6 @@ export default function EmployeeManagement({ employees, onEmployeeUpdated }: Emp
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-slate-300">Machine ID</Label>
-                <Input
-                  value={editingEmployee?.machineId || ''}
-                  onChange={(e) => setEditingEmployee(prev => prev ? {...prev, machineId: e.target.value} : null)}
-                  placeholder="BNG-XXXXXXXXXXXX (from employee's system)"
-                  className="bg-slate-800 border-slate-700 text-white font-mono text-sm"
-                />
-                <p className="text-xs text-slate-500">
-                  Enter the machine ID provided by the employee from their system report tab
-                </p>
-              </div>
               <div className="space-y-2">
                 <Label className="text-slate-300">Password</Label>
                 <Input

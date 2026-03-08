@@ -69,15 +69,13 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
       employeeName: "John Doe",
       employeeAccountNumber: "BGO0000001",
       amount: "500.00",
-      machineId: "DEV-ABC12345",
       transactionId: "TRX123456789"
     },
     {
       createdAt: new Date(Date.now() - 86400000).toISOString(),
       employeeName: "Jane Smith", 
       employeeAccountNumber: "BGO0000002",
-      amount: "250.00",
-      machineId: "DEV-DEF67890"
+      amount: "250.00"
     }
   ];
 
@@ -87,7 +85,7 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
       title: "🔐 Private Key Updated",
       description: "Your private key has been securely loaded",
       duration: 2000,
-      className: "bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-lg",
+      className: "bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-lg text-center",
     });
   };
 
@@ -98,7 +96,7 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
       title: "👋 Logged Out",
       description: "Private key has been cleared for security",
       duration: 2000,
-      className: "bg-gradient-to-r from-gray-500 to-slate-600 text-white border-0 shadow-lg",
+      className: "bg-gradient-to-r from-gray-500 to-slate-600 text-white border-0 shadow-lg text-center",
     });
     onLogout();
   };
@@ -109,7 +107,7 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
       title: "📄 File Generated",
       description: "Account file has been generated successfully",
       duration: 2500,
-      className: "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-0 shadow-lg",
+      className: "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-0 shadow-lg text-center",
     });
   };
 
@@ -120,7 +118,7 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
         description: "No employee data available to export",
         variant: "destructive",
         duration: 3000,
-        className: "bg-gradient-to-r from-yellow-500 to-orange-600 text-white border-0 shadow-lg",
+        className: "bg-gradient-to-r from-yellow-500 to-orange-600 text-white border-0 shadow-lg text-center",
       });
       return;
     }
@@ -146,7 +144,7 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
       title: "✅ Export Successful",
       description: "Admin data exported successfully",
       duration: 2500,
-      className: "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg",
+      className: "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg text-center",
     });
   };
 
