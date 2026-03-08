@@ -24,20 +24,14 @@ export default function DeviceSettings() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch("/api/license/machine-id", {
-        method: "GET",
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      });
-        const data = await res.json();
+        // Use client-side machine ID only
         if (!cancelled) {
-          setMachineId(data.machineId || "");
+          setMachineId(getMachineIdSync());
           setDeviceInfo(getDeviceInfo());
         }
       } catch {
         if (!cancelled) {
-          // Fallback to client-side machine ID
-          setMachineId(getMachineIdSync());
+          setMachineId("DEVICE_ID_UNAVAILABLE");
           setDeviceInfo(getDeviceInfo());
         }
       } finally {

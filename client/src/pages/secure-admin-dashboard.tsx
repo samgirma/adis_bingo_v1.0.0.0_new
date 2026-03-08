@@ -31,7 +31,6 @@ import SecuritySettings from "@/components/security-settings";
 import UserProvisioning from "@/components/user-provisioning";
 import FinancialMonitor from "@/components/financial-monitor";
 import EmployeeManagement from "@/components/employee-management";
-import ActivationGenerator from "@/components/activation-generator";
 
 interface SecureAdminDashboardProps {
   onLogout: () => void;
@@ -283,10 +282,6 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
                 <UserPlus className="w-4 h-4 mr-2" />
                 Provisioning
               </TabsTrigger>
-              <TabsTrigger value="activation" className="data-[state=active]:bg-slate-700 data-[state=active]:text-white">
-                <Key className="w-4 h-4 mr-2" />
-                Activation
-              </TabsTrigger>
               <TabsTrigger value="monitoring" className="data-[state=active]:bg-slate-700 data-[state=active]:text-white">
                 <TrendingUp className="w-4 h-4 mr-2" />
                 Monitoring
@@ -316,11 +311,6 @@ export default function SecureAdminDashboard({ onLogout }: SecureAdminDashboardP
                 employees={trackingData?.users?.filter(user => user.role === 'employee') || []}
                 onFileGenerated={handleFileGenerated}
               />
-            </TabsContent>
-
-            {/* Activation Tab */}
-            <TabsContent value="activation" className="space-y-6 mt-6">
-              <ActivationGenerator privateKey={privateKey} />
             </TabsContent>
 
             {/* Monitoring Tab */}

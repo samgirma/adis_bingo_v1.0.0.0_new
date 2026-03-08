@@ -36,18 +36,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Basic license endpoints (simplified)
-app.get('/api/license/status', (req, res) => {
-  res.json({ activated: false, message: "License system simplified for deployment" });
-});
-
-app.get('/api/license/machine-id', (req, res) => {
-  res.json({ 
-    machineId: `SERVERLESS_${Date.now().toString(36).toUpperCase()}`,
-    message: "Simplified machine ID for serverless environment"
-  });
-});
-
 // Basic auth endpoints
 app.post('/api/auth/login', (req, res) => {
   res.json({ 
@@ -61,35 +49,6 @@ app.get('/api/auth/me', (req, res) => {
     user: { id: 1, username: 'admin', role: 'admin' },
     message: "User info simplified for deployment"
   });
-});
-
-// Activation endpoint
-app.post('/api/activate', (req, res) => {
-  try {
-    const { encryptedData } = req.body;
-    
-    if (!encryptedData) {
-      return res.status(400).json({ 
-        success: false, 
-        error: "No activation data provided" 
-      });
-    }
-    
-    // Simplified activation - always succeed for deployment
-    console.log("Activation attempt:", encryptedData.substring(0, 50) + "...");
-    
-    res.json({ 
-      success: true, 
-      message: "Activation successful (simplified for deployment)",
-      activatedAt: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error("Activation error:", error);
-    res.status(500).json({ 
-      success: false, 
-      error: "Activation failed" 
-    });
-  }
 });
 
 // Basic game endpoints

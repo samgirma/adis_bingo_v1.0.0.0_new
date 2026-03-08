@@ -5,7 +5,7 @@ import { z } from "zod";
 import { storage } from "../../storage/prisma-storage";
 import { emitBalanceUpdate, emitEvent } from "../services/socket.service";
 import { decryptData, verifyBalance, generateKeyPair } from "../lib/crypto";
-import { insertUserSchema, insertGamePlayerSchema, insertTransactionSchema } from "@shared/schema-simple";
+import { InsertUser, InsertGamePlayer, InsertTransaction } from "@shared/schema-simple";
 
 const { publicKey: SYSTEM_PUBLIC_KEY } = generateKeyPair();
 

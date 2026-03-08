@@ -4,7 +4,6 @@ import express from "express";
 import { createServer } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "../../storage/prisma-storage";
-import { isActivated } from "../../../scripts/license-db";
 
 // Import route modules
 import { authRoutes } from "./auth.routes";
@@ -13,7 +12,6 @@ import { gameRoutes } from "./game.routes";
 import { userRoutes } from "./user.routes";
 import { cartelaRoutes } from "./cartela.routes";
 import { balanceRoutes } from "./balance.routes";
-import { licenseRoutes, licenseController } from "./license.routes";
 import rechargeRoutes from "./recharge.routes";
 import * as adminController from "../controllers/admin.controller";
 
@@ -24,24 +22,8 @@ export async function registerRoutes(app: Express) {
   // ─── STATIC ASSETS ───────────────────────────────────────────────
   app.use('/attached_assets', express.static('attached_assets'));
 
-  // ─── LICENSE & RECHARGE (Always accessible) ───────────────────────
-  app.use("/api/license", licenseRoutes);
-  app.post("/api/activate", licenseController.activate);
+  // ─── RECHARGE ROUTES ─────────────────────────────────────────────
   app.use("/api/recharge", rechargeRoutes);
-
-  // ─── ACTIVATION GATE ──────────────────────────────────────────────
-  app.use("/api", (req, res, next) => {
-    const allowed = req.path.startsWith("/license") ||
-                   req.path === "/activate" ||
-                   req.path.startsWith("/auth");
-    if (allowed) return next();
-    if (!isActivated()) {
-      return res.status(403).json({
-        message: "Application not activated. Please upload a valid activation file first."
-      });
-    }
-    next();
-  });
 
   // ─── MOUNT MODULAR ROUTES ─────────────────────────────────────────
   app.use("/api/auth", authRoutes);

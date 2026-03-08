@@ -143,3 +143,5 @@ export class AdminStorage {
     console.log(`Updating recharge stats for employee ${employeeId} with amount ${amount}`);
   }
 }
+
+export const adminStorage = new AdminStorage();
