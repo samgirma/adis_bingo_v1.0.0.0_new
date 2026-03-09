@@ -33,7 +33,6 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
 // Serve static audio files with proper MIME types (before other routes)
-import path from "path";
 const publicPath = path.resolve(process.cwd(), "public");
 app.use(express.static(publicPath, {
   setHeaders: (res, filePath) => {
