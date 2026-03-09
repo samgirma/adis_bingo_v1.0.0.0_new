@@ -31,6 +31,16 @@ export async function registerRoutes(app: Express) {
   app.use("/api/games", gameRoutes);
   app.use("/api/cartelas", cartelaRoutes);
   app.use("/api/balance", balanceRoutes);
+
+  // ─── DASHBOARD ROUTES ─────────────────────────────────────────────
+  // Serve dashboard pages
+  app.get("/dashboard/admin", (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'dist/public', 'index.html'));
+  });
+  
+  app.get("/dashboard/employee", (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'dist/public', 'index.html'));
+  });
   
   // Transactions route (separate from admin routes for specific client compatibility)
   app.get("/api/transactions/admin", adminController.getAdminTransactions);
