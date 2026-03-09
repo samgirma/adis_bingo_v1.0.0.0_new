@@ -115,6 +115,7 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
       return;
     }
 
+    if (!selectedEmployee || !rechargeAmount) {
       toast({
         title: "Missing Information",
         description: "Please fill in all recharge fields",
