@@ -353,6 +353,40 @@ export async function loadCredit(req: Request, res: Response) {
     }
 }
 
+// ─── SAVE EMPLOYEE ──────────────────────────────────────────
+export async function handleSaveEmployee(req: Request, res: Response) {
+  try {
+    const user = req.session.user;
+    if (!user || user.role !== 'admin') {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+
+    const { id, name, username, email, accountNumber, role, balance, isBlocked } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: "Employee ID is required" });
+    }
+
+    const updatedEmployee = await storage.updateUser(parseInt(id), {
+      name,
+      username,
+      email,
+      accountNumber,
+      role,
+      balance: balance ? parseFloat(balance) : undefined,
+      isBlocked: isBlocked !== undefined ? isBlocked : undefined
+    });
+
+    res.json({
+      message: "Employee updated successfully",
+      employee: updatedEmployee
+    });
+  } catch (error) {
+    console.error("Error saving employee:", error);
+    res.status(500).json({ message: "Failed to save employee", error: error.message });
+  }
+}
+
 // ─── UPDATE EMPLOYEE PASSWORD ──────────────────────────────────────
 export async function updateEmployeePassword(req: Request, res: Response) {
     try {

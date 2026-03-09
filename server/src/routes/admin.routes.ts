@@ -11,6 +11,7 @@ router.post("/employees/generate-recharge-file", adminController.generateRecharg
 router.post("/recharge/generate-file", adminController.generateRechargeFile); // Backward compatibility
 router.post("/employees/generate-account-file", adminController.generateAccountFile);
 router.patch("/employees/:id/password", adminController.updateEmployeePassword);
+router.put("/employees/:id", adminController.handleSaveEmployee);
 
 // Tracking data
 router.get("/tracking-data", adminController.getTrackingData);
