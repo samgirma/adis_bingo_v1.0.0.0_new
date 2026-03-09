@@ -21,11 +21,14 @@
     {
       "src": "/(.*)",
       "dest": "/dist/public/$1"
-    }
+    },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "env": {
     "NODE_ENV": "production"
   },
+  
   "installCommand": "npm install",
   "buildCommand": "npm run db:generate && npm run build"
 }
