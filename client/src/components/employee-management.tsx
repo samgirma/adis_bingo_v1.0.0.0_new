@@ -350,7 +350,7 @@ export default function EmployeeManagement({ employees, onEmployeeUpdated }: Emp
               Cancel
             </Button>
             <Button
-              onClick={handleSaveEmployee}
+              onClick={updateEmployee}
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
               Save Changes
