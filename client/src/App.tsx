@@ -7,47 +7,52 @@ import LoginPage from "./pages/login-page";
 import SecureAdminDashboard from "./pages/secure-admin-dashboard";
 import EmployeeDashboard from "./pages/employee-dashboard";
 import ProtectedRoute from "./components/protected-route";
+import RedirectHandler from "./components/redirect-handler";
 
 function AppRouter() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const [, setLocation] = useLocation();
 
   const handleLogout = () => {
-    window.location.href = "/";
+    logout();
+    setLocation('/');
   };
 
   return (
     <>
       <Toaster />
-      <Router>
-        <Route path="/" component={LoginPage} />
-        <Route path="/login" component={LoginPage} />
+      <RedirectHandler>
+        <Router>
+          <Route path="/" component={LoginPage} />
+          <Route path="/login" component={LoginPage} />
 
-        {/* Dashboard Routes with Role Protection */}
-        <Route path="/dashboard/admin">
-          <ProtectedRoute requiredRole="admin">
-            <SecureAdminDashboard onLogout={handleLogout} />
-          </ProtectedRoute>
-        </Route>
-        
-        <Route path="/dashboard/employee">
-          <ProtectedRoute requiredRole="employee">
-            <EmployeeDashboard onLogout={handleLogout} />
-          </ProtectedRoute>
-        </Route>
+          {/* Dashboard Routes with Role Protection */}
+          <Route path="/dashboard/admin">
+            <ProtectedRoute requiredRole="admin">
+              <SecureAdminDashboard onLogout={handleLogout} />
+            </ProtectedRoute>
+          </Route>
+          
+          <Route path="/dashboard/employee">
+            <ProtectedRoute requiredRole="employee">
+              <EmployeeDashboard onLogout={handleLogout} />
+            </ProtectedRoute>
+          </Route>
 
-        {/* Legacy Routes for backward compatibility with protection */}
-        <Route path="/admin">
-          <ProtectedRoute requiredRole="admin">
-            <SecureAdminDashboard onLogout={handleLogout} />
-          </ProtectedRoute>
-        </Route>
-        
-        <Route path="/employee">
-          <ProtectedRoute requiredRole="employee">
-            <EmployeeDashboard onLogout={handleLogout} />
-          </ProtectedRoute>
-        </Route>
-      </Router>
+          {/* Legacy Routes for backward compatibility with protection */}
+          <Route path="/admin">
+            <ProtectedRoute requiredRole="admin">
+              <SecureAdminDashboard onLogout={handleLogout} />
+            </ProtectedRoute>
+          </Route>
+          
+          <Route path="/employee">
+            <ProtectedRoute requiredRole="employee">
+              <EmployeeDashboard onLogout={handleLogout} />
+            </ProtectedRoute>
+          </Route>
+        </Router>
+      </RedirectHandler>
     </>
   );
 }
