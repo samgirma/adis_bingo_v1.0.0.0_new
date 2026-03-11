@@ -76,7 +76,7 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = data.filename || `recharge-file-${Date.now()}.enc`;
+      a.download = data.filename || `recharge-file-${Date.now()}.bin`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -147,7 +147,7 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = data.filename || `recharge-file-${Date.now()}.enc`;
+      a.download = data.filename || `recharge-file-${Date.now()}.bin`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

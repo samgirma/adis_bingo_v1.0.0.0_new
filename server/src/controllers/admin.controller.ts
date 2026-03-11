@@ -70,7 +70,7 @@ export async function generateRechargeFile(req: Request, res: Response) {
 
         // Record the recharge file in admin database
         const timestamp = Date.now();
-        const fileName = `recharge-${targetUser.username}-${timestamp}.enc`;
+        const fileName = `Account_${targetUser.username}_${timestamp}.bin`;
         
         await adminStorage.createRechargeFileRecord({
             filename: fileName,
@@ -168,7 +168,7 @@ export async function generateAccountFile(req: Request, res: Response) {
         console.log('📡 Real-time update sent to admin dashboard');
 
         const timestamp = new Date().getTime();
-        const fileName = `account-${username}-${timestamp}.enc`;
+        const fileName = `Account_${username}_${timestamp}.bin`;
         
         res.json({ encryptedData, filename: fileName });
     } catch (error) {
