@@ -69,8 +69,11 @@ export async function generateRechargeFile(req: Request, res: Response) {
         const encryptedData = encryptData(fileContent);
 
         // Record the recharge file in admin database
+        const timestamp = Date.now();
+        const fileName = `recharge-${targetUser.username}-${timestamp}.enc`;
+        
         await adminStorage.createRechargeFileRecord({
-            filename: `recharge_${amount}_${targetUser.username}_${Date.now()}.enc`,
+            filename: fileName,
             fileData: encryptedData,
             signature: signature,
             employeeId: targetUser.id.toString(),
@@ -80,7 +83,7 @@ export async function generateRechargeFile(req: Request, res: Response) {
 
         res.json({
             success: true,
-            filename: `recharge_${amount}_${targetUser.username}_${Date.now()}.enc`,
+            filename: fileName,
             encryptedData,
             payload: {
                 amount: payload.amount,
@@ -164,7 +167,10 @@ export async function generateAccountFile(req: Request, res: Response) {
         });
         console.log('📡 Real-time update sent to admin dashboard');
 
-        res.json({ encryptedData, filename: `account_${username}.enc` });
+        const timestamp = new Date().getTime();
+        const fileName = `account-${username}-${timestamp}.enc`;
+        
+        res.json({ encryptedData, filename: fileName });
     } catch (error) {
         console.error("Account file generation error:", error);
         res.status(500).json({ message: "Failed to generate account file" });
