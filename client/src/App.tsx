@@ -6,6 +6,7 @@ import { Toaster } from "./components/ui/toaster";
 import LoginPage from "./pages/login-page";
 import SecureAdminDashboard from "./pages/secure-admin-dashboard";
 import EmployeeDashboard from "./pages/employee-dashboard";
+import ProtectedRoute from "./components/protected-route";
 
 function AppRouter() {
   const { user } = useAuth();
@@ -21,20 +22,30 @@ function AppRouter() {
         <Route path="/" component={LoginPage} />
         <Route path="/login" component={LoginPage} />
 
-        {/* Dashboard Routes */}
+        {/* Dashboard Routes with Role Protection */}
         <Route path="/dashboard/admin">
-          <SecureAdminDashboard onLogout={handleLogout} />
+          <ProtectedRoute requiredRole="admin">
+            <SecureAdminDashboard onLogout={handleLogout} />
+          </ProtectedRoute>
         </Route>
+        
         <Route path="/dashboard/employee">
-          <EmployeeDashboard onLogout={handleLogout} />
+          <ProtectedRoute requiredRole="employee">
+            <EmployeeDashboard onLogout={handleLogout} />
+          </ProtectedRoute>
         </Route>
 
-        {/* Legacy Routes for backward compatibility */}
+        {/* Legacy Routes for backward compatibility with protection */}
         <Route path="/admin">
-          <SecureAdminDashboard onLogout={handleLogout} />
+          <ProtectedRoute requiredRole="admin">
+            <SecureAdminDashboard onLogout={handleLogout} />
+          </ProtectedRoute>
         </Route>
+        
         <Route path="/employee">
-          <EmployeeDashboard onLogout={handleLogout} />
+          <ProtectedRoute requiredRole="employee">
+            <EmployeeDashboard onLogout={handleLogout} />
+          </ProtectedRoute>
         </Route>
       </Router>
     </>

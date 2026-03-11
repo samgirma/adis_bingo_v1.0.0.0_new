@@ -26,11 +26,11 @@ export default function LoginPage() {
       
       console.log('Login success - user data:', { role: user.role, username: user.username, isAdmin: data.isAdmin });
       
-      // 1. Immediately update the 'auth/me' cache with the user data returned from login
+      // 1. Immediately update the 'auth/me' cache with user data returned from login
       queryClient.setQueryData(["/api/auth/me"], { user });
       
       // 2. Force an immediate background refetch of all critical queries
-      // This ensures the balance, shop status, and user profile are fresh
+      // This ensures that balance, shop status, and user profile are fresh
       await queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
       
       // 3. Specifically trigger the cartelas fetch for the new user ID
@@ -43,16 +43,24 @@ export default function LoginPage() {
         className: "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg text-center",
       });
 
-      // 4. Redirect to dashboard
-      if (user.role === "super_admin" || user.role === "admin") {
+      // 4. Dynamic role-based redirection with fallback
+      const userRole = user.role?.toUpperCase();
+      
+      if (userRole === 'SUPER_ADMIN' || userRole === 'ADMIN') {
         console.log('Redirecting to admin dashboard');
         setLocation("/dashboard/admin");
-      } else if (user.role === "employee") {
+      } else if (userRole === 'EMPLOYEE') {
         console.log('Redirecting to employee dashboard');
         setLocation("/dashboard/employee");
       } else {
-        console.log('Unknown role, defaulting to employee dashboard');
-        setLocation("/dashboard/employee");
+        console.log('Unknown or undefined role, redirecting to login for safety');
+        toast({
+          title: "⚠️ Role Error",
+          description: "User role not recognized. Please contact administrator.",
+          variant: "destructive",
+          duration: 3000,
+        });
+        setLocation("/login");
       }
     },
     onError: (error: any) => {
@@ -80,7 +88,7 @@ export default function LoginPage() {
           className: "bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-0 shadow-lg text-center",
         });
         // Update auth state with user data
-        login(data.user);
+        loginMutation.mutate(data.user);
         // Redirect to employee dashboard
         setLocation('/dashboard/employee');
       } else {
