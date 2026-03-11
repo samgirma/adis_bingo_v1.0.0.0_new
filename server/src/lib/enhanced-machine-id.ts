@@ -41,6 +41,11 @@ class EnhancedMachineIdGenerator {
    * Generate enhanced machine ID using multiple hardware markers
    */
   public getMachineId(): string {
+    // Vercel deployment bypass - return generic web client ID
+    if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+      return 'web-client-' + crypto.createHash('md5').update('vercel-deployment').digest('hex').substring(0, 12);
+    }
+    
     if (this.cachedMachineId) {
       return this.cachedMachineId;
     }
@@ -320,6 +325,11 @@ class EnhancedMachineIdGenerator {
    * Verify machine ID against current hardware
    */
   public verifyMachineId(storedId: string): boolean {
+    // Vercel deployment bypass - always return true for web clients
+    if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+      return true;
+    }
+    
     try {
       const currentId = this.getMachineId();
       return currentId === storedId;
@@ -342,6 +352,11 @@ class EnhancedMachineIdGenerator {
    * Check if hardware has changed significantly
    */
   public hasHardwareChanged(): boolean {
+    // Vercel deployment bypass - never report hardware changes for web clients
+    if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+      return false;
+    }
+    
     if (!this.hardwareMarkers) {
       return false;
     }

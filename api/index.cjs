@@ -1,8 +1,25 @@
 const express = require("express");
 const path = require("path");
+const session = require("express-session");
+const MemoryStore = require("memorystore")(session);
 require("dotenv/config");
 
 const app = express();
+
+// Session configuration for Vercel (memory-based)
+app.use(session({
+  store: new MemoryStore({
+    checkPeriod: 86400000 // 24 hours
+  }),
+  secret: process.env.SESSION_SECRET || 'vercel-bingo-session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+    maxAge: 86400000, // 24 hours
+    httpOnly: true
+  }
+}));
 
 // Add CORS headers for proper browser communication
 app.use((req, res, next) => {

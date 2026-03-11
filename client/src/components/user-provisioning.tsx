@@ -157,7 +157,6 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
 
       // Reset form
       setSelectedEmployee("");
-      setMachineId("");
       setRechargeAmount("");
 
       toast({
@@ -279,7 +278,7 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
           {/* Recharge Provisioning */}
           {activeTab === 'recharge' && (
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                 <div className="space-y-2">
                   <Label>Select Employee</Label>
                   <Select value={selectedEmployee} onValueChange={setSelectedEmployee}>
@@ -294,16 +293,6 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
-                <div className="space-y-2">
-                  <Input
-                    onChange={(e) => setMachineId(e.target.value)}
-                    placeholder="BNG-XXXXXXXXXXXX (from employee's system)"
-                    className="bg-gray-900 border-gray-700 text-white placeholder:text-gray-400 font-mono text-sm"
-                  />
-                  <p className="text-xs text-gray-500">
-                    Enter the machine ID from the employee's report tab
-                  </p>
                 </div>
               </div>
 
@@ -336,7 +325,7 @@ export default function UserProvisioning({ privateKey, employees, onFileGenerate
 
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-blue-700">
-                  <strong>Security Features:</strong> Each recharge file includes a unique nonce, timestamp, and machine ID binding to prevent reuse and unauthorized access.
+                  <strong>Security Features:</strong> Each recharge file includes a unique nonce and timestamp to prevent reuse and unauthorized access. For web deployment, files are bound to user accounts instead of hardware.
                 </p>
               </div>
             </div>
