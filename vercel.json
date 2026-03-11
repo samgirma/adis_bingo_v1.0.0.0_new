@@ -4,6 +4,13 @@
     {
       "src": "api/index.cjs",
       "use": "@vercel/node"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
   "routes": [
@@ -13,7 +20,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "installCommand": "npm install",
-  "buildCommand": "npm run db:generate && npm run build"
+  }
 }
