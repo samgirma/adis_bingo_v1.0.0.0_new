@@ -24,6 +24,8 @@ export default function LoginPage() {
     onSuccess: async (data: any) => {
       const user = data.user;
       
+      console.log('Login success - user data:', { role: user.role, username: user.username, isAdmin: data.isAdmin });
+      
       // 1. Immediately update the 'auth/me' cache with the user data returned from login
       queryClient.setQueryData(["/api/auth/me"], { user });
       
@@ -43,8 +45,13 @@ export default function LoginPage() {
 
       // 4. Redirect to dashboard
       if (user.role === "super_admin" || user.role === "admin") {
+        console.log('Redirecting to admin dashboard');
         setLocation("/dashboard/admin");
       } else if (user.role === "employee") {
+        console.log('Redirecting to employee dashboard');
+        setLocation("/dashboard/employee");
+      } else {
+        console.log('Unknown role, defaulting to employee dashboard');
         setLocation("/dashboard/employee");
       }
     },
@@ -75,7 +82,7 @@ export default function LoginPage() {
         // Update auth state with user data
         login(data.user);
         // Redirect to employee dashboard
-        window.location.href = '/employee-dashboard';
+        setLocation('/dashboard/employee');
       } else {
         // Regular registration success
         toast({

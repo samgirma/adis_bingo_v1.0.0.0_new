@@ -107,7 +107,10 @@ export async function login(req: Request, res: Response) {
                 return res.status(500).json({ message: "Session save failed" });
             }
             const { password: _, ...userWithoutPassword } = user;
-            res.json({ user: userWithoutPassword });
+            res.json({ 
+                user: userWithoutPassword,
+                isAdmin: false
+            });
         });
     } catch (error) {
         console.error("Login error:", error);
